@@ -1,3 +1,5 @@
 .idea
 
 sparkstreaming-logs.iml
+
+target/*

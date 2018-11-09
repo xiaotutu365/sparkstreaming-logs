@@ -1,68 +1,24 @@
-# sparkstreaming-logs
-spark streaming 流式日志处理
+## spark streaming 流式日志处理
 
-Spark面试链接：
-https://blog.csdn.net/weixin_40691089/article/details/79606260
+本文由Spark Streaming日志处理系统来讲解Spark的相关知识点，包括：
+* RDD编程
 
-### Spark Streaming入门
+### RDD编程
+RDD：Spark对数据的核心抽象，全称是Resilient Distributed Dataset，弹性分布式数据集。它其实就是分布式的元素集合。
+在Spark中，对数据的操作不外乎：
+* 创建RDD
+* 转化已有RDD
+* 调用RDD
 
-Spark Streaming是否需要独立安装？
-One stack to rule them all:一栈式解决
+操作进行求值。而在这一切的背后，Spark会自动将RDD中的数据分发到集群上，并将操作并行化执行。
 
-应用场景
-* 推荐系统
-* 日志处理
-* 视频流处理
-* 金融欺诈
+#### RDD基础
+Spark中的RDD就是一个不可变的分布式对象集合。每个RDD都被分为多个分区，这些分区运行在集群中的不同节点上。
 
-集成spark生态系统的使用
-![](https://i.imgur.com/8UW5NhZ.png)
+用户可以使用两种方法创建RDD：
+* 读取一个外部数据集
+* 在驱动器程序里分发驱动器程序中的对象集合（比如list和set）
 
-![](https://i.imgur.com/ICn8adL.png)
-
-![](https://i.imgur.com/L4rJi06.png)
-
-![](https://i.imgur.com/S9jMzho.png)
-
-![](https://i.imgur.com/SYZWnOH.png)
-
-https://github.com/apache/spark
-
-### 示例
-输入源：
-nc -lk 9999
-#### 生产
-使用spark-submit来提交我们的spark应用程序运行的脚本
-> ./spark-submit --master local[2] \
-> --class org.apache.spark.examples.streaming.NetworkWorkCount \
-> --name NetworkWordCount \
-> /examples/jars/spark-examples_2.11-2.2.0.jar hadoop000 9999
-
-#### 测试
-如何使用spark-shell来提交
-> ./spark-shell --master local[2]
-![](https://i.imgur.com/fZHC3vQ.png)
-
-### Spark Streaming工作原理（粗粒度）
-Spark Streaming接收到实时数据流，把数据按照指定的时间段切成一片片小的数据块，然后把小的数据块传给Spark Engine处理。 
-
-![](https://i.imgur.com/lo3ZTHx.png)
-
----
-## Spark Streaming核心概念与编程
-### Spark Streaming核心
-* 核心概念
-* Transformations
-* Output Operations
-* 实战案例
-
-#### 核心概念
-* StreamingContext
-一旦StreamingContext定义好之后，可以做一些事情，见官网：
-http://spark.apache.org/docs/latest/streaming-programming-guide.html#initializing-streamingcontext
-* DStreams（Discretized Streams）离散化流
-	* Internally, a DStream is represented by a continuous series of RDDs.
-	* Each RDD in a DStream contains data from a certain interval.
-对DStream操作算子，比如map/flatMap，其实底层会被翻译为对DStream中的每个RDD都做相同的操作，因为一个DStream是由不同批次的RDD所构成的。
-* Input DStreams and Receivers
-Every input DStream (except file stream, discussed later in this section) is associated with a Receiver (Scala doc, Java doc) object which receives the data from a source and stores it in Spark’s memory for processing.
+创建出来后，RDD支持两种类型的操作：
+* 转化操作（transformation）：会由一个RDD生成一个新的RDD
+* 行动操作（action）：会对RDD计算出一个结果，并把结果返回到驱动器程序中或把结果存储到外部存储系统（如HDFS）中

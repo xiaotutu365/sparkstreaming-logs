@@ -1,5 +1,8 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
 .idea
-
-sparkstreaming-logs.iml
-
-target/*
+*.iws
+*.iml
+*.ipr
